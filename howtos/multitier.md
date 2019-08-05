@@ -46,3 +46,10 @@ object Server extends App {
     }
 }
 ```
+
+
+## Disconnecting from a remote
+If it is necessary to disconnect from a peer it can be done by calling the `disconnect` method on the `remote` instance:
+```scala
+remote[Client].disconnect()
+```
