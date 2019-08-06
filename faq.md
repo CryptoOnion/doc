@@ -117,3 +117,7 @@ The trick is to map `someEvent` into a pair with the current value of `sig`. Aft
 ## I get an exception when folding an event, but the body of the fold doesn't even get executed
 
 You can try replacing `event.fold(init) { ... }` with `Events.foldOne(event, init) { ... }`
+
+## Where are my exceptions?
+
+Per default, exceptions are not printed in Loci. So if your application just stops working, be sure to handle all possible exceptions yourself. For example, `.asLocal_?` might throw an exception if the Await times out. Therefore, it can help to wrap it in a `Try {}`.
