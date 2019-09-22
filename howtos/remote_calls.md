@@ -16,22 +16,21 @@ nav_order: 2
 ## Functions
 To access remote functions **with no return values**, they have to be called using the `remote` directive:
 ```scala
-var counter = placed[Client] {0}
-def increment() = placed[Client] {counter += 1}
+var counter = on[Client] {0}
+def increment() = on[Client] {counter += 1}
 
-placed[Client].main {
-    increment() // executed locally
-    remote call increment() // executed an all Client instances, except on this one
-}
-
-placed[Server].main {
-    // increment() // does not compile
-    remote call increment() // executed an all Client instances
-}
+def main() = (on[Client] {
+        increment() // executed locally
+        remote call increment() // executed an all Client instances, except on this one
+    }) and
+    (on[Server] {
+        // increment() // does not compile
+        remote call increment() // executed an all Client instances
+    })
 ```
 If the return value is needed, `asLocal` hast to be called on the expression:
 ```scala
-def increment() = placed[Client] {counter += 1; counter}
+def increment() = on[Client] {counter += 1; counter}
 val future_value = (remote call increment()).asLocal
 ```
 

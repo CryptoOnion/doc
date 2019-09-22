@@ -10,11 +10,12 @@ Using the `Peer` type, a programmer can specify the different peers needed for t
 The relation between them is specified using the `Tie` type.
 An example for this is a typical client-server relationship (where one server is connected to multiple clients), which can be defined like this:
 ```scala
-trait Server extends Peer {
+@peer type Peer
+@peer type Server <: Peer {
   type Tie <: Multiple[Client]
 }
-trait Client extends Peer {
-  type Tie <: Single[Server]
+@peer type Client <: Peer {
+  type Tie <: Single[Server]    
 }
 ```
 Additional connections can be specified by adding them with the `with` keyword:

@@ -19,7 +19,7 @@ Currently, all code has to live inside a scala object, with a `@multitier` annot
 ```scala
 @multitier
 object Chat {
-    // server and client code lives inside here
+    // server and client code lives in here
 }
 ```
 ## multitier setup
@@ -28,7 +28,7 @@ To execute a multitier application all peers have to be initialized inside an `A
 object Client extends App {
     multitier setup new Chat.Client {
         def connect = {
-            request[Chat.Server] { TCP("server-address", 12345)
+             connect[Chat.Server] { TCP("server-address", 12345)
             }
             .and(listen[Chat.Client] {TCP(12346)})
         }
