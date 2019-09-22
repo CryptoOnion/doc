@@ -5,4 +5,4 @@ has_children: true
 nav_order: 2
 ---
 # Getting Started
-This section explains a few common patterns in ScalaLoci.
+This section explains how to get started using ScalaLoci.
