@@ -12,14 +12,14 @@ nav_order: 1
 1. TOC
 {:toc}
 
-Scala Loci is a distributed multitier language. This means that you can write distributed applications as if they were one single application. When compiling your program, it will be 'sliced' into multiple parts and the compiler will create an executable for each **_peer_** (the machines that are going to run parts of your program). All the network communication logic will be generated automatically by Scala Loci.
+ScalaLoci is a distributed multitier language. This means that you can write distributed applications as if they were one single application. When compiling your program, it will be 'sliced' into multiple parts and the compiler will create an executable for each **_peer_** (the machines that are going to run parts of your program). All the network communication logic will be generated automatically by ScalaLoci.
 
 This part of our tutorial will cover the peer setup of your application where you define the different types of nodes in your distributed application and their relationship (the topology of your network).
 
 ## Imports
 In the same directory as your build.sbt, create the folder src/main/scala with the file `Chat.scala`. This will be our chat application.
 
-Add the following imports to `Chat.scala` make Scala Loci available in your program:
+Add the following imports to `Chat.scala` make ScalaLoci available in your program:
 
 ```scala
 import loci._ // the loci language
@@ -27,7 +27,7 @@ import loci.serializer.upickle._ // the selected serializer
 import loci.communicator.tcp._ // the selected communication backend
 ```
 
-In our example we will use upickle as our serializer and the tcp communication backend. Of course you can make different choices for your real world application. For more information on this see the the Scala Loci [Github repository](https://github.com/scala-loci/scala-loci).
+In our example we will use upickle as our serializer and the tcp communication backend. Of course you can make different choices for your real world application. For more information on this see the the ScalaLoci [Github repository](https://github.com/scala-loci/scala-loci).
 
 This example will additionally make use of the [REScala](https://github.com/rescala-lang/REScala) library for reactive and event driven programming in Scala. This allows us to model new chat messages as events.
 
@@ -37,7 +37,7 @@ import rescala.default._
 
 ## The multitier environment
 
-In a Scala Loci application, all code has to live in the multitier environment which you specify with the `@multitier` annotation.
+In a ScalaLoci application, all code has to live in the multitier environment which you specify with the `@multitier` annotation.
 
 ```scala
 @multitier

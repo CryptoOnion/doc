@@ -25,9 +25,9 @@ $ cd my-chat-app
 $ touch build.sbt
 ```
 
-## Getting Scala Loci
+## Getting ScalaLoci
 
-Now there are a few steps needed to install the Scala Loci language for use in your Scala project. (Those are copied from the Scala Loci [Github repository](https://github.com/scala-loci/scala-loci) so you might want to check there too just in case anything changes.)
+Now there are a few steps needed to install the ScalaLoci language for use in your Scala project. (Those are copied from the ScalaLoci [Github repository](https://github.com/scala-loci/scala-loci) so you might want to check there too just in case anything changes.)
 
 1. Enable the [Macro Paradise Plugin](http://docs.scala-lang.org/overviews/macros/paradise.html) (for macro annotations) in your `build.sbt`
 
