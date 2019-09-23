@@ -62,4 +62,4 @@ def main() = on[Client] {
 
 Notice how we access the `publicMessage` event which is stored on another peer (the server) using `asLocal`.
 
-We can also call functions of other peers using `asLocal`, however, this will not be covered in this tutorial. More information can be found in the [Concepts section](../concepts/remote_calls.html).
+We can also call functions of other peers using `asLocal`, however, this will not be covered in this tutorial. More information can be found in the [Concepts section](../concepts/remote_calls).
