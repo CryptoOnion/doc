@@ -3,16 +3,16 @@ layout: default
 title: FAQ
 nav_order: 4
 ---
-# FAQ
+<h1>FAQ</h1>
 {: .no_toc }
+
+Here you can find a few common questions regarding the framework.
 
 ## Table of contents
 {: .no_toc .text-delta }
 
 1. TOC
 {:toc}
-
-Here you can find a few common questions regarding the framework.
 
 ## My peers mysteriously stop working without any error message
 
