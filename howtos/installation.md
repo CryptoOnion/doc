@@ -5,19 +5,27 @@ parent: Getting Started
 nav_order: 1
 ---
 
-# Setting up your project using sbt
+<h1>1. Installation</h1>
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+## Setting up your project using sbt
 
 The following instructions will use [sbt](https://www.scala-sbt.org) as the build tool to manage your project and its dependencies.
 
 After installing sbt (see their [documentation](https://www.scala-sbt.org/1.x/docs/index.html) for more information on that) run the following shell commands to create a new sbt project. 
 
 ```bash
-$ mkdir my-project
-$ cd my-project
+$ mkdir my-chat-app
+$ cd my-chat-app
 $ touch build.sbt
 ```
 
-# Getting Scala Loci
+## Getting Scala Loci
 
 Now there are a few steps needed to install the Scala Loci language for use in your Scala project. (Those are copied from the Scala Loci [Github repository](https://github.com/scala-loci/scala-loci) so you might want to check there too just in case anything changes.)
 
