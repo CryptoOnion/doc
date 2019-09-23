@@ -4,7 +4,7 @@ title: Placements
 parent: Concepts
 nav_order: 2
 ---
-## Placements
+<h1>Placements</h1>
 A placement in ScalaLoci defines the location where a function or a variable is located.
 
 ## Table of contents
@@ -21,9 +21,9 @@ def peerfunc() = on[Registry] {
     // code runs on registry
 }
 ```
-The type in the placed annotations defines, where the function is placed. In the case above, the function
+In the case above, the function
 would be available on all `Registry`-peers and can be remote called on different peers. 
-If the function should return Value, additional type hints are necessary:
+If the function should return Value, additional type annotations are necessary:
 ```scala
 def peerfunc2(): Int on Registry = placed {
     // code runs on registry and returns an Int
@@ -34,11 +34,16 @@ Notice that while the first example uses an `on[*]` block to tell Loci about the
 
 ## Variables
 The syntax for variables is quite similar to the one for functions:
+
+```scala
+val chats = on[Registry] { new Array[Strings](10)}
+```
+
 ```scala
 val chats: Array[Strings] on Registry = placed { new Array[Strings](10)}
 ```
 
-## localOn
+## Local-Only Placement
 Variables and functions defined with `on` are visible and accessible by all peers. If only local access on the peer is needed,
 a `Local[*]` type can be used.
 ```scala
@@ -48,5 +53,5 @@ val local_chats: Local[Array[Strings]] on Registry = placed { new Array[Strings]
 
 Warning
 {: .label .label-red }
-Functions with `localOn` have to explicitly return (have an return statement), even if they do not have any return values.
+Functions with `Local` have to explicitly return (have an return statement), even if they do not have any return values.
 </div>

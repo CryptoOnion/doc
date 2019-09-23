@@ -52,7 +52,7 @@ There are two variants of the `asLocal` function, which allow accessing the unde
 
 
 ## Variables
-Accessing variables works by using the `asLocal` directive:
+Accessing variables works by using the `asLocal` directive as well:
 ```scala
 val counter = placed[Client] {0}
 val geigercounter = placed[Server] {0}
@@ -63,7 +63,7 @@ placed[Client].main {
 }
 ```
 
-## remote.on
+## Executing Code on a different Peer
 Code written inside a `remote.on` expression is executed on a different peer.
 ```scala
 def main() = on[Client]{
