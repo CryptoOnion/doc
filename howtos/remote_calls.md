@@ -66,7 +66,7 @@ placed[Client].main {
 ## remote.on
 Code written inside a `remote.on` expression is executed on a different peer.
 ```scala
-placed[Client].main {
+def main() = on[Client]{
     remote[Server] {
         // this gets called on all connected Server instances
     }
