@@ -10,4 +10,6 @@ This site serves as an introduction into [ScalaLoci](https://scala-loci.github.i
 
 This documentation is available at [https://scala-loci.github.io/doc/](https://scala-loci.github.io/doc/).
 
-To get started using ScalaLoci, have a look at the [Getting Started](howtos/getting_started) section or look at one of the example applications on [Github](https://github.com/scala-loci/examples-simple).
+To get started using ScalaLoci, have a look at the tutorial in the [Getting Started](getting_started/getting_started) section or look at one of the example applications on [Github](https://github.com/scala-loci/examples-simple).
+
+If you are interested in the research behind ScalaLoci, have a look at the [publications](https://scala-loci.github.io/#publications).
