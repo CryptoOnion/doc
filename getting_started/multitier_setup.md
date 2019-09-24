@@ -61,6 +61,9 @@ Our example will use multiple **_Client_** peers and one **_Server_** peer which
 
 Notice how the keywords `Multiple` and `Single` specify the type and quantity of the ties between the peers.
 
+---
+[Back: Installation](installation.html){: .btn .btn-purple .mr-90 }
+[Next: Placing Values and Functions](placement.html){: .btn .btn-green}
 <!-- TODO: managing connections at runtime -->
 
 <!-- 

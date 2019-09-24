@@ -97,3 +97,8 @@ Now there are a few steps needed to install the ScalaLoci language for use in yo
         ```scala
         libraryDependencies += "de.tuda.stg" %% "scala-loci-serializer-circe" % "0.3.0"
         ```
+
+---
+
+[Next: Multitier Setup](multitier_setup.html){: .btn .btn-green}
+

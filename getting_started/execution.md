@@ -90,3 +90,6 @@ $ sbt run
 sbt should detect all implemented main classes and will let you select which one you want to execute.
 
 If you want to build more sophisticated applications or simply want to learn more about ScalaLoci, have a look at the [Concepts Section](../concepts/concepts).
+
+---
+[Back: Placing Values and Functions](placement.html){: .btn .btn-purple}
