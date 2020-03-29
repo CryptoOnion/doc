@@ -19,7 +19,7 @@ To access remote functions **with no return values**, they have to be called usi
 var counter = on[Client] {0}
 def increment() = on[Client] {counter += 1}
 
-def main() = (on[Client] {
+def main(): Unit on Peer = (on[Client] {
         increment() // executed locally
         remote call increment() // executed an all Client instances, except on this one
     }) and

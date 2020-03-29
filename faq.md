@@ -14,6 +14,23 @@ Here you can find a few common questions regarding the framework.
 1. TOC
 {:toc}
 
+## Defining main method in multiple peers
+
+If your application requires a method with the same name, but with different semantics on different peers, you have
+to define a common peer type and specify the return type explicitly. You can then combine the logic using the `and`
+keyword between two peers. If you have more than two peers, you need to add correct parenthesis like below. So
+the implementation of peer `Client` is combined with the tuple of `(Controller and Server)`.
+
+```scala
+  def main(): Unit on Peer = on[Client] {
+    // main method on Client
+  } and (on[Controller] {
+    // main method of controller
+  } and on[Server] {
+    // main method of server
+  })
+```
+
 ## Remote[*] is not transmittable
 
 `Remotes[*]` are used to indentify locally connected peers. They have no global meaning
