@@ -14,6 +14,32 @@ Here you can find a few common questions regarding the framework.
 1. TOC
 {:toc}
 
+## Remote[*] is not transmittable
+
+`Remotes[*]` are used to indentify locally connected peers. They have no global meaning
+and are therefore not transmittable. If you still want to save the peer you could make value definitions local like so:
+
+```scala
+// remote represent the account who changed the setting
+val setting: Local[Signal[(Option[Remote[AdminClient]], Boolean)]] on Server = placed { ... }
+```
+
+If you need to transfer those values you could create a new signal containing only the transmittable
+content (ex: the second value of the tuple from above) or you could map the `Remote[*]` to a unique or otherwise
+representable value:
+
+```scala
+  val whoChangedSetting = on[Server] sbj {
+    requestor: Remote[AdminClient] => {
+      setting.changed.map {
+        case (remote, value) if remote == requestor => "User: " + (username from remote).asLocal + " changed settins to " + value
+        case (remote, value) if remote != requestor => "Succces: You changed the settings to " + value
+      }.latest()
+    }
+  }
+``` 
+
+
 ## My peers mysteriously stop working without any error message
 
 This might be caused by an uncaught exception. If an exceptions occurs and is not properly handled, a node can crash without any warnings. To find the cause of the exception, you can try observing the reactives:
