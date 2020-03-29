@@ -14,6 +14,25 @@ Here you can find a few common questions regarding the framework.
 1. TOC
 {:toc}
 
+## Blocking method calls and endless loops
+
+If you perform any blocking calls (i.e. `Thread.sleep`, endless loops or `I/O`), you should move them to your main 
+method. Otherwise it could block the communication and initialization of the multitier object.
+
+```scala
+  // Avoid:
+  on[Server] {
+    while (running) {
+        ...
+    }
+  }
+
+  // Better:
+  def main() = on[Server] {
+    // perform it here   
+  }
+```
+
 ## Defining main method in multiple peers
 
 If your application requires a method with the same name, but with different semantics on different peers, you have
