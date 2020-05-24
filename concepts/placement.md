@@ -43,6 +43,23 @@ val chats = on[Registry] { new Array[String](10)}
 val chats: Array[String] on Registry = placed { new Array[String](10)}
 ```
 
+## Subjective Values
+By default, every peer accessing a shared value will receive the same data. In some cases, it is beneficial to return a different value based on the accessing peer instance. In this case subjective values can be used.
+
+The `sbj` modifier binds an identifier holding a reference to the peer instance that accesses the subjective value. This identifier can be used to filter the returned value on a per remote peer basis.
+
+For example, in the following code snippet, a `Client` accessing `publicMessage` will receive all `message` values of other `Client` instances, but not his own.
+
+```scala
+val message = on[Client] { Evt[String] }
+
+val publicMessage = on[Server] sbj { client: Remote[Client] =>
+  message.asLocalFromAllSeq collect {
+    case (remote, message) if remote != client => message
+  }
+}
+```
+
 ## Local-Only Placement
 Variables and functions defined with `on` are visible and accessible by all peers. If only local access on the peer is needed, a `Local[*]` type can be used.
 ```scala
