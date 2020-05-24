@@ -44,10 +44,13 @@ val chats: Array[String] on Registry = placed { new Array[String](10)}
 ```
 
 ## Local-Only Placement
-Variables and functions defined with `on` are visible and accessible by all peers. If only local access on the peer is needed,
-a `Local[*]` type can be used.
+Variables and functions defined with `on` are visible and accessible by all peers. If only local access on the peer is needed, a `Local[*]` type can be used.
 ```scala
 val local_chats: Local[Array[String]] on Registry = placed { new Array[String](5)}
+```
+The `local` keyword can also be used instead, in which case Scala will infer the type automatically. It behaves similarly to `placed` expressions.
+```scala
+val local_chats = on[Registry] local { new Array[String](5)}
 ```
 <div class="code-example" markdown="1">
 
