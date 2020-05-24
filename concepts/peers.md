@@ -36,9 +36,10 @@ type Tie <: Multiple[Client] with Single[Registry]
 ```
 
 ## Optional Connections
-If a tie might not be needed during the complete runtime of a program (e.g. if an introducer is used),
-it can be specified using an `Optional` tie:
+If a tie might not be needed during the complete runtime of a program (e.g. if an introducer is used), it can be specified using an `Optional` tie:
 ```scala
 type Tie <: Multiple[Client] with Optional[Registry]
 ```
-In this case the connection to the Registry might not be available, which has to be handled by the programmer.
+In this case the connection to the Registry might not be available. As such, accesses to the optional peer will yield `Option` values, which can be handled by the programmer.
+
+Note that `Optional` is used for managing a 1-to-1 relationship between peers. If there is a 1-to-n relationship in which n can be 0, the `Multiple` keyword should be used instead.
