@@ -54,8 +54,9 @@ def main() = on[Client] {
     publicMessage.asLocal observe println
 
     // let the user send new messages via stdin
-    for (line <- scala.io.Source.stdin.getLines)
+    for (line <- scala.io.Source.stdin.getLines) {
       message.fire(line)
+    }
     }
 }
 ```

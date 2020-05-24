@@ -39,6 +39,8 @@ Notice how the **Server** instance uses `listen[Chat.Client]` to open a port for
 If you got everything right, the complete chat application should look like this now:
 
 ```scala
+package chatsimple
+
 import loci._
 import loci.transmitter.rescala._
 import loci.serializer.upickle._

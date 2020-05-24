@@ -36,18 +36,18 @@ Notice that while the first example uses an `on[*]` block to tell Loci about the
 The syntax for variables is quite similar to the one for functions:
 
 ```scala
-val chats = on[Registry] { new Array[Strings](10)}
+val chats = on[Registry] { new Array[String](10)}
 ```
 
 ```scala
-val chats: Array[Strings] on Registry = placed { new Array[Strings](10)}
+val chats: Array[String] on Registry = placed { new Array[String](10)}
 ```
 
 ## Local-Only Placement
 Variables and functions defined with `on` are visible and accessible by all peers. If only local access on the peer is needed,
 a `Local[*]` type can be used.
 ```scala
-val local_chats: Local[Array[Strings]] on Registry = placed { new Array[Strings](5)}
+val local_chats: Local[Array[String]] on Registry = placed { new Array[String](5)}
 ```
 <div class="code-example" markdown="1">
 

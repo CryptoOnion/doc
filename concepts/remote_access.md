@@ -54,10 +54,10 @@ There are two variants of the `asLocal` function, which allow accessing the unde
 ## Variables
 Accessing variables works by using the `asLocal` directive as well:
 ```scala
-val counter = placed[Client] {0}
-val geigercounter = placed[Server] {0}
+val counter = on[Client] {0}
+val geigercounter = on[Server] {0}
 
-placed[Client].main {
+on[Client].main {
     print(counter) // 0, the initial local value
     print(counter.asLocalFromAll) // retrieve all connected counter values
 }
@@ -78,9 +78,9 @@ def main() = on[Client]{
 ```
 Accessing and returning values can be done by using `capture` and `asLocal`:
 ```scala
-var counter = placed[Server] {0}
-def increment(a: Int) = placed[Server] {counter += a; counter}
-placed[Client].main {
+var counter = on[Server] {0}
+def increment(a: Int) = on[Server] {counter += a; counter}
+on[Client].main {
     val i = 15
     val new_counter_value = remote[Server].capture(i) {
         increment(i)

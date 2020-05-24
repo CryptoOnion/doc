@@ -40,8 +40,7 @@ import rescala.default._
 In a ScalaLoci application, all code has to live in the multitier environment which you specify with the `@multitier` annotation.
 
 ```scala
-@multitier
-object Chat {
+@multitier object Chat {
     // server and client code lives in here
 }
 ```
