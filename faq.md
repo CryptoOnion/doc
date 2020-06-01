@@ -75,6 +75,16 @@ representable value:
   }
 ``` 
 
+## Mismatched types Future
+
+In combination with serializing the data in could happen that you get errors about
+mismatched types when transferring the data over different peers. This could be caused if you forgot
+to include the required import statement.
+
+```scala
+// This import is necessary to fix type mismatch with Future
+import loci.transmitter.rescala._
+```
 
 ## My peers mysteriously stop working without any error message
 
