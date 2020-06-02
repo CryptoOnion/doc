@@ -44,8 +44,10 @@ SensoryModule {
 Main {
   val injectedOutput = on[Client] { Evt[String] }
 
-  val sensors extends SensoryModule
-  val commands extends CommandModule
+  @multitier object sensors extends SensoryModule
+  @multitier object commands extends CommandModule {
+    val clientOutput = injectedOutput  
+  }
 
  def main(): Unit on Client = {
    combined.readOutput.asLocal observer { injectedOutput fire }
