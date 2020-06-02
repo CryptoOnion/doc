@@ -195,3 +195,27 @@ You can try replacing `event.fold(init) { ... }` with `Events.foldOne(event, ini
 Per default, exceptions are not printed in Loci. So if your application just stops working, be sure to handle all possible exceptions yourself. For example, `.asLocal_?` might throw an exception if the Await times out. Therefore, it can help to wrap it in a `Try {}`.
 
 In Scala-Loci 0.4.0 this behavior changed. Exception will be printed now by default.
+
+## My right events combined with '||' are not firing
+
+The ReScala notation with `||` is used for or. The operator is left-biased. This means
+if the event on the left side is already firing, you right events that fire at the same time
+are ignored. You can use `Events.foldAll` if you need to save the result. However, if
+you only need an event and not a signal, you would have to manually reset it. An alternative
+is to combine them with `Event.zipOuter`. Here is example combining sequence of events.
+
+```scala
+val events: Seq[Event[String]] = [...]
+
+var out: Event[Seq[String]] = Evt[Seq[String]]
+for (elem <- events) {
+  out = out.zipOuter(elem).map {
+    // this shouldn't happen, because either one or both events should fire when this invokes
+    // However this prevents any build warnings
+    case (None, None) => throw new IllegalStateException("None events fired")
+    // unwrap the option - otherwise the type is unknown
+    case (None, b: Some[String]) => Seq(b.value)
+    case (a: Some[Seq[String]], b: Option[String]) => a.value ++ b
+  }
+}
+```
