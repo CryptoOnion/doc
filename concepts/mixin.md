@@ -2,7 +2,7 @@
 layout: default
 title: Module Mixin
 parent: Concepts
-nav_order: 5
+nav_order: 6
 ---
 
 # Module Mixin
