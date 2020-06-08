@@ -57,8 +57,8 @@ and are therefore not transmittable. If you need to save an instance of a remote
 Another peer can no longer access this value.
 
 Considering a control interface with a switch. We want to know which peer last changed this value. Therefore,
-we use a tuple containing the current value and peer instance who requested the change. In this example we
-use optional for representing a non-peer change (e.g. physical access) or for its initial value.
+we use a tuple containing the current value and peer instance (here: an administrator) who requested the change. In this 
+example we use optional for representing a non-peer change (e.g. physical access) or for its initial value.
 ```scala
 val setting: Local[Signal[(Option[Remote[AdminClient]], Boolean)]] on Server = placed { ... }
 ```
@@ -70,9 +70,12 @@ representable value:
 ```scala
   val whoChangedSetting = on[Server] sbj {
     requestSource: Remote[AdminClient] => {
+      // update on change
       setting.changed.map {
-        case (remote, value) if remote == requestSource => "User: " + (username from requestSource).asLocal + " changed settings to " + value
-        case (remote, value) if remote != requestSource => "Success: You changed the settings to " + value
+        // Someone else changed the value
+        case (Some(remote), value) if remote != requestSource => "User: " + (username from requestSource).asLocal + " changed settings to " + value
+        // we changed it
+        case (Some(remote), value) if remote == requestSource => "Success: You changed the settings to " + value
       }.latest()
     }
   }
