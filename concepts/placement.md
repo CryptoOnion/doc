@@ -44,11 +44,17 @@ val chats: Array[String] on Registry = placed { new Array[String](10)}
 ```
 
 ## Subjective Values
-By default, every peer accessing a shared value will receive the same data. In some cases, it is beneficial to return a different value based on the accessing peer instance. In this case subjective values can be used.
+By default, every peer accessing a shared value will receive the same data. In some cases, it is beneficial to return a 
+different value based on the accessing peer instance. In this case subjective values can be used.
 
-The `sbj` modifier binds an identifier holding a reference to the peer instance that accesses the subjective value. This identifier can be used to filter the returned value on a per remote peer basis.
+The `sbj` modifier binds an identifier holding a reference to the peer instance that accesses the subjective value. 
+This identifier can be used to operate (e.g. mapping) on a per remote peer basis. The values are created and saved
+on a per remote basis. Peers can then request the value (e.g. using `asLocal`) in order to transmit the value from
+the peer, that holds the specific value, to the request issuer. 
 
-For example, in the following code snippet, a `Client` accessing `publicMessage` will receive all `message` values of other `Client` instances, but not his own.
+For example, in the following code snippet, a `Client` accessing `publicMessage` will receive all `message` values of 
+other `Client` instances, but not his own. Internally there are multiple `publicMessage` values, one for each connected
+peer. Code inside the `sbj` runs locally (here: on the Server) and updates the internal values one by one.
 
 ```scala
 val message = on[Client] { Evt[String] }
