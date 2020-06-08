@@ -42,7 +42,7 @@ val publicMessage = on[Server] sbj { client: Remote[Client] =>
 }
 ```
 
-Notice the `sbj` keyword which let's us adapt the value to each peer that is accessing it. In this example we use this to not display their own messages to clients that are accessing the public messages.
+Notice the `sbj` keyword which lets us adapt the value to each peer that is accessing it. In this example we use this to not display their own messages to clients that are accessing the public messages.
 
 ## Placing Functions
 

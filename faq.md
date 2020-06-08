@@ -17,7 +17,7 @@ Here you can find a few common questions regarding the framework.
 ## Blocking method calls and endless loops
 
 If you perform any blocking calls (i.e. `Thread.sleep`, endless loops or `I/O`), you should move them to your main 
-method. Otherwise it could block the communication and initialization of the multitier object.
+method. Otherwise, it could block the communication and initialization of the multitier object.
 
 ```scala
   // Avoid:
@@ -52,7 +52,7 @@ the implementation of peer `Client` is combined with the tuple of `(Controller a
 
 ## Remote[*] is not transmittable
 
-`Remotes[*]` are used to indentify locally connected peers. They have no global meaning
+`Remotes[*]` are used to identify locally connected peers. They have no global meaning
 and are therefore not transmittable. If you still want to save the peer you could make value definitions local like so:
 
 ```scala
@@ -61,15 +61,15 @@ val setting: Local[Signal[(Option[Remote[AdminClient]], Boolean)]] on Server = p
 ```
 
 If you need to transfer those values you could create a new signal containing only the transmittable
-content (ex: the second value of the tuple from above) or you could map the `Remote[*]` to a unique or otherwise
+content (ex: the second value of the tuple from above), you could map the `Remote[*]` to a unique or otherwise
 representable value:
 
 ```scala
   val whoChangedSetting = on[Server] sbj {
-    requestor: Remote[AdminClient] => {
+    requestSource: Remote[AdminClient] => {
       setting.changed.map {
-        case (remote, value) if remote == requestor => "User: " + (username from remote).asLocal + " changed settings to " + value
-        case (remote, value) if remote != requestor => "Succces: You changed the settings to " + value
+        case (remote, value) if remote == requestSource => "User: " + (username from requestSource).asLocal + " changed settings to " + value
+        case (remote, value) if remote != requestSource => "Success: You changed the settings to " + value
       }.latest()
     }
   }
