@@ -68,7 +68,7 @@ representable value:
   val whoChangedSetting = on[Server] sbj {
     requestor: Remote[AdminClient] => {
       setting.changed.map {
-        case (remote, value) if remote == requestor => "User: " + (username from remote).asLocal + " changed settins to " + value
+        case (remote, value) if remote == requestor => "User: " + (username from remote).asLocal + " changed settings to " + value
         case (remote, value) if remote != requestor => "Succces: You changed the settings to " + value
       }.latest()
     }
