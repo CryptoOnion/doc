@@ -196,12 +196,6 @@ The trick is to map `someEvent` into a pair with the current value of `sig`. Aft
 
 You can try replacing `event.fold(init) { ... }` with `Events.foldOne(event, init) { ... }`
 
-## Where are my exceptions?
-
-Per default, exceptions are not printed in Loci. So if your application just stops working, be sure to handle all possible exceptions yourself. For example, `.asLocal_?` might throw an exception if the Await times out. Therefore, it can help to wrap it in a `Try {}`.
-
-In Scala-Loci 0.4.0 this behavior changed. Exception will be printed now by default.
-
 ## My right events combined with '||' are not firing
 
 The ReScala notation with `||` is used for or. The operator is left-biased. This means
