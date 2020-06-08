@@ -199,10 +199,12 @@ You can try replacing `event.fold(init) { ... }` with `Events.foldOne(event, ini
 ## My right events combined with '||' are not firing
 
 The ReScala notation with `||` is used for or. The operator is left-biased. This means
-if the event on the left side is already firing, you right events that fire at the same time
+if the event on the left side is already firing, your right events that fire at the same time
 are ignored. You can use `Events.foldAll` if you need to save the result. However, if
 you only need an event and not a signal, you would have to manually reset it. An alternative
-is to combine them with `Event.zipOuter`. Here is example combining sequence of events.
+is to combine them with `Event.zipOuter`. The following example builds a single event that zips a sequence
+of events each containing a single string to a sequence of strings. This could be useful if you have multiple
+sources that output a single log messages and you need an event where you listen to in order to print the output.
 
 ```scala
 val events: Seq[Event[String]] = [...]
