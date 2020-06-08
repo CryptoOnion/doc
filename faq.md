@@ -53,14 +53,17 @@ the implementation of peer `Client` is combined with the tuple of `(Controller a
 ## Remote[*] is not transmittable
 
 `Remotes[*]` are used to identify locally connected peers. They have no global meaning
-and are therefore not transmittable. If you still want to save the peer you could make value definitions local like so:
+and are therefore not transmittable. If you need to save an instance of a remote, you could define the value as local.
+Another peer can no longer access this value.
 
+Considering a control interface with a switch. We want to know which peer last changed this value. Therefore,
+we use a tuple containing the current value and peer instance who requested the change. In this example we
+use optional for representing a non-peer change (e.g. physical access) or for its initial value.
 ```scala
-// remote represent the account who changed the setting
 val setting: Local[Signal[(Option[Remote[AdminClient]], Boolean)]] on Server = placed { ... }
 ```
 
-If you need to transfer those values you could create a new signal containing only the transmittable
+If you need to transfer those values, you could create a new signal containing only the transmittable
 content (ex: the second value of the tuple from above), you could map the `Remote[*]` to a unique or otherwise
 representable value:
 
