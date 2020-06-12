@@ -151,19 +151,19 @@ With module mixing, this monitoring system can easily be added to another subsys
 
 In this case, the `Master` and `Worker` peers are overridden to be (subtypes of) `Monitor` and `Monitored` peers. Note how `Master` still needs to specify a tie both to `Worker` and `Monitored`, even though `Worker` is now specified as a subtype of `Monitored`.
 
-### Structering modules
+## Dependence between Modules
 
-#### Introduction
+This section will highlight concepts on how to deal with dependencies between modules. The previous sections
+show examples for unidirectional dependencies. So an `Editor` referencing the storage module or
+a `MonitoredMasterWorker` using the implementation of its subsystems meanwhile the subsystems being independent of 
+each other. This means there is only a one-way dependency. Designing a system, often one problem occurs: cyclic 
+dependencies. This means that an multitier module `A` has a reference to multitier module `B` and vice versa.
 
-This guide shows some approaches how to combine multiple modules together, which are dependent on each other. Please
-refer to the modules guide for an introduction into modules. 
+Considering the mentioned peer types specialization strategies, the following sections present one approach based on
+each strategy for dealing with them. Besides, specially targeting cyclic dependencies, other projects could include 
+these ideas too in order to integrate a clear structure. 
 
-The following approaches are especially useful for projects dealing with cyclic references. This means that an multitier
-module `A` has a reference to multitier module `B` and vice versa.
-
-#### Approaches
-
-##### Encapsulated
+### Encapsulated
 
 The first approach is about making independent modules that expose signals and events for their respective
 in and output. Peer definitions then have to be independent from each other and can only be accessed
@@ -193,7 +193,7 @@ Main {
 }
 ```
 
-#### Self types
+### Self types
 
 The next approach uses the `Cake` pattern for `Scala`. This allows to swap modules like shown
 [here](https://stackoverflow.com/a/5172697).
