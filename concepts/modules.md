@@ -150,3 +150,68 @@ With module mixing, this monitoring system can easily be added to another subsys
 ```
 
 In this case, the `Master` and `Worker` peers are overridden to be (subtypes of) `Monitor` and `Monitored` peers. Note how `Master` still needs to specify a tie both to `Worker` and `Monitored`, even though `Worker` is now specified as a subtype of `Monitored`.
+
+### Structering modules
+
+#### Introduction
+
+This guide shows some approaches how to combine multiple modules together, which are dependent on each other. Please
+refer to the modules guide for an introduction into modules. 
+
+The following approaches are especially useful for projects dealing with cyclic references. This means that an multitier
+module `A` has a reference to multitier module `B` and vice versa.
+
+#### Approaches
+
+##### Encapsulated
+
+The first approach is about making independent modules that expose signals and events for their respective
+in and output. Peer definitions then have to be independent from each other and can only be accessed
+from the same multitier object.
+
+```scala
+CommandModule {
+  // leave undefined
+  val clientOutput: Event[String] on Client
+}
+
+SensoryModule {
+  val readOutput: Event[String] on Controller = [...]
+}
+
+Main {
+  val injectedOutput = on[Client] { Evt[String] }
+
+  @multitier object sensors extends SensoryModule
+  @multitier object commands extends CommandModule {
+    val clientOutput = injectedOutput  
+  }
+
+ def main(): Unit on Client = {
+   combined.readOutput.asLocal observer { injectedOutput fire }
+ }
+}
+```
+
+#### Self types
+
+The next approach uses the `Cake` pattern for `Scala`. This allows to swap modules like shown
+[here](https://stackoverflow.com/a/5172697).
+
+```scala
+CommandModule {
+  val clientInput: Signal[String] on Client = [...]
+}
+
+ControlModule {
+  // dependency on command
+  self: CommandModule =>
+
+  val doSomethingAction: Event[String] on Controller = clientInput[...]
+}
+
+Main {
+  @multitier object combined extends CommandModule with ControlModule
+}
+```
+
