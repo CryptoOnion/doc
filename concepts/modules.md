@@ -33,7 +33,7 @@ They can be defined as only abstract members to act as a module interface, or as
 
 This example defines a Backup service as having a processor that has a single tie to a storage, as well as a storage that has a single tie to a processor. Furthermore it defines the `store` and `load` methods as having the placed types `.. on Processor`, placing them on the `Processor` peer. Note that the `load` function results in a `Future` to account for processing time and networking delays.
 
-This interface can then be implemented using a concrete storage system by using `extend`.
+This interface can then be implemented using a concrete storage system by using `extends`.
 
 ```scala
 @multitier trait FileBackup extends Backup {
@@ -166,7 +166,7 @@ these ideas too in order to integrate a clear structure.
 ### Encapsulated
 
 The first approach is about making independent modules that expose signals and events for their respective
-in and output. Peer definitions then have to be independent from each other and can only be accessed
+input and output. Peer definitions then have to be independent from each other and can only be accessed
 from the same multitier object.
 
 ```scala
