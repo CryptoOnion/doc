@@ -41,7 +41,7 @@ This interface can then be implemented using a concrete storage system by using 
 		// code that makes a remote call to insert() to send data to Storage
 	}
 
-	def load(id: Long): Unit on Processor = placed {
+	def load(id: Long): Future[Data] on Processor = placed {
 		// code that makes a remote call to query() to load data from Storage
 	}
 
@@ -166,31 +166,12 @@ these ideas too in order to integrate a clear structure.
 ### Encapsulated
 
 The first approach is about making independent modules that expose signals and events for their respective
-input and output. Peer definitions then have to be independent from each other and can only be accessed
-from the same multitier object.
+input and output. Note that in this case peer definitions need to be independent of each other.
+
+Considering module referencing with the editor example, hee
 
 ```scala
-CommandModule {
-  // leave undefined
-  val clientOutput: Event[String] on Client
-}
 
-SensoryModule {
-  val readOutput: Event[String] on Controller = [...]
-}
-
-Main {
-  val injectedOutput = on[Client] { Evt[String] }
-
-  @multitier object sensors extends SensoryModule
-  @multitier object commands extends CommandModule {
-    val clientOutput = injectedOutput  
-  }
-
- def main(): Unit on Client = {
-   combined.readOutput.asLocal observer { injectedOutput fire }
- }
-}
 ```
 
 ### Self types
