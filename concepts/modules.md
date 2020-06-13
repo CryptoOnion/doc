@@ -168,10 +168,83 @@ these ideas too in order to integrate a clear structure.
 The first approach is about making independent modules that expose signals and events for their respective
 input and output. Note that in this case peer definitions need to be independent of each other.
 
-Considering module referencing with the editor example, hee
+Considering module referencing with the editor example with an added logging module. This logging module is responsible
+for logging changes made to the document and aggregating them on a separate peer. 
+
+First, create a new multitier module. There are two inputs (i.e. `injectedDoc` and `saveEvent`) and one output 
+(i.e. `logMessages`). 
 
 ```scala
+@multitier trait Logging {
 
+  @peer type ChangeSource <: { type Tie <: Single[Aggregator] }
+  @peer type Aggregator <: { type Tie <: Single[ChangeSource] }
+
+  val injectedDoc: Signal[String] on ChangeSource
+  val saveEvent: Event[Unit] on ChangeSource
+
+  [...]
+
+  val logMessages: Signal[Seq[String]] on Aggregator = ...
+}
+```  
+
+The inputs are retrieved from the parent `Editor` module. The aggregator is responsible for reacting on the changes
+made on the client (e.g. mapping them into a different format) and collecting them. It exposes the messages it holds. 
+The implementation how the messages are displayed is left out. In this scenario the Editor is responsible for rerouting
+it. Therefore, we have a cyclic reference, because the `Logging` takes two inputs from the Editor while the `Editor`
+reads the `logMessages` on `Logging`.  
+
+In the `Editor` the peer types needs to be adjusted and the logging module have to be added. The two variables 
+`document` and `uiLog` were also added representing the current document and log messages that are taken from the
+`Logging` module and are displayed on the UI.
+
+```scala
+@multitier trait Editor {
+  @peer type Client <: backup.Processor with logging.ChangeSource {
+    type Tie <: Single[Server] with Single[backup.Storage] with Single[logging.Aggregator]
+  }
+  @peer type Server <: backup.Storage with logging.Aggregator {
+    type Tie <: Single[Client] with Single[backup.Processor] with Single[logging.ChangeSource]
+  }
+
+  // the two modules
+  val backup: Backup
+  val logging: Logging
+
+  val document: Signal[String] on Client = placed { Var.empty[String] }
+  val uiLog: Signal[Seq[String]] on Client = logging.logMessages.asLocal
+}
+```
+
+The two inputs in the `Logging` module are still undefined. The companion object `editor` needs to be adjusted. This
+requires to create two extra variables, here prefixed with `bridge*`. Those variables  have the type `Evt` and `Var`
+in order to fire or set them externally, meanwhile the internal usage `Logging` only sees `Event` and `Signal` and
+cannot override them. Lastly the new variables needs to be connected. Therefore a main method is introduced that
+adds an observer to both original sources and forwards the changes to our bridge variables.
+
+```scala
+@multitier object editor extends Editor {
+  @multitier object backup extends FileBackup
+
+  // added:
+  @multitier object logging extends Logging {
+      // The new events needs to be created inside this module, because:
+      // (1) variables placed on peers defined by the module needs to placed inside them
+      // (2) if events are placed on the parent, asLocal would be required, but it's not usable at this stage
+      val bridgeSaveEvent: Evt[Unit] on ChangeSource = placed { Evt[Unit]() }
+      val saveEvent: Event[Unit] on ChangeSource = bridgeSaveEvent
+
+      val bridgeDoc: Var[String] on ChangeSource = placed { Var.empty[String] }
+      val injectedDoc: Signal[String] on ChangeSource = bridgeDoc
+  }
+
+  // connect the new variables
+  def main(): Unit on Client = {
+    saveButton observe { logging.bridgeSaveEvent fire _ }
+    document.changed.observe { logging.bridgeDoc set _ }
+  }
+}
 ```
 
 ### Self types
