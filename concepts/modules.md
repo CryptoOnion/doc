@@ -249,23 +249,90 @@ adds an observer to both original sources and forwards the changes to our bridge
 
 ### Self types
 
-The next approach uses the `Cake` pattern for `Scala`. This allows to swap modules like shown
-[here](https://web.archive.org/web/20161002031809/http://www.cakesolutions.net/teamblogs/2011/12/19/cake-pattern-in-depth).
+The next approach uses the [`Cake`](https://web.archive.org/web/20161002031809/http://www.cakesolutions.net/teamblogs/2011/12/19/cake-pattern-in-depth) 
+pattern for `Scala`. It implements dependency injection ([DI](https://en.wikipedia.org/wiki/Dependency_injection)) 
+concepts in `Scala` using self-types. The self-types represent the dependency service (e.g. trait) the current
+scope requires.
+
+This approach uses Mixin. Therefore, the following example is based of the previous example for peer type mixin. 
+Considering a scenario with an added command module. Commands are used to shutdown the and also query the monitoring.
+Therefore, we have a similar cyclic problem like before. 
+
+Separating the command module into three components, allows to create unidirectional data flow so that no cyclic
+references exist. First create ControlCommand, this will expose the users (here: issuer) intend to shutdown the 
+service (here: Actor). This module represents actions that should be performed on actors.
 
 ```scala
-CommandModule {
-  val clientInput: Signal[String] on Client = [...]
+@multitier trait ControlCommand {
+  @peer type Actor <: { type Tie <: Multiple[ControlIssuer] }
+  @peer type ControlIssuer <: { type Tie <: Single[Actor] }
+
+  val shutdown: Signal[Boolean] on ControlIssuer = Var(false)
 }
+```
 
-ControlModule {
-  // dependency on command
-  self: CommandModule =>
+Next create query module. This will query the Oracle for the current data. In this case the Oracle is a sub-type
+of a Monitor peer. However, the data and the peer definition is located inside the Monitoring module:
 
-  val doSomethingAction: Event[String] on Controller = clientInput[...]
+```scala
+@multitier trait Monitoring {
+  [...]
+  val connected: Signal[Int] on Monitor = placed { Signal.dynamic {
+    remote[Monitored].connected().size
+  }}
+[...]
 }
+```
 
-Main {
-  @multitier object combined extends CommandModule with ControlModule
+Therefore, it's required to add a self-type which represents a dependency on this module. Then the variable `connected` 
+could be retrieved in `commandOutput` inside the query module.
+
+```scala 
+@multitier trait QueryCommand {
+  self: Monitoring =>
+
+  @peer type Oracle <: Monitor { type Tie <: Multiple[QuerySource] with Multiple[Monitored] }
+  @peer type QuerySource <: { type Tie <: Single[Oracle] with Single[Monitor] }
+
+  val commandOutput: Signal[String] on QuerySource = connected.asLocal.map("Connected: " + _)
+}
+```
+
+For convenience, it's possible to group the implementation now in a Command module. It combines both query and control
+components. Note that the value of `Monitoring` dependency hasn't specified yet. So we have to specificy the dependency
+here too. Furthermore, the tie specification has to be pulled up too. 
+
+```scala
+@multitier trait Command extends QueryCommand with ControlCommand {
+  self: Monitoring =>
+
+  @peer type Receiver <: Oracle with Monitor with Actor {
+    type Tie <: Multiple[QuerySource] with Multiple[Monitored] with Multiple[ControlIssuer]
+  }
+
+  @peer type Sender <: QuerySource with ControlIssuer {
+    type Tie <: Single[Receiver] with Single[Oracle] with Single[Monitor] with Single[Actor]
+  }
+}
+```
+
+In the end, the combined module `MonitoredMasterWorker` that includes all modules has to add the above command module
+and including a new peer type `Client`. In this scenario, the Master peer handles the commands and therefore adds
+Receiver for its super type and pulls the respective tie specifications up. 
+
+The `Monitoring` dependency that is required in `Command` is satisfied in this stage, because the combined module
+includes the submodule using `extends [...] Monitoring`. 
+
+```scala
+@multitier trait MonitoredMasterWorker[T] extends Command with MultipleMasterWorker[T] with Monitoring {
+  @peer type Master <: Monitor with Receiver {
+    type Tie <: Multiple[Worker] with Multiple[Monitored] with Multiple[Sender]
+  }
+
+  @peer type Worker <: Monitored { type Tie <: Single[Master] with Single[Monitor] }
+  @peer type Client <: Sender {
+    type Tie <: Single[Receiver] with Single[Oracle] with Single[Actor] with Single[Monitor]
+  }
 }
 ```
 
