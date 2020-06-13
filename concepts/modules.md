@@ -250,7 +250,7 @@ adds an observer to both original sources and forwards the changes to our bridge
 ### Self types
 
 The next approach uses the `Cake` pattern for `Scala`. This allows to swap modules like shown
-[here](https://stackoverflow.com/a/5172697).
+[here](https://web.archive.org/web/20161002031809/http://www.cakesolutions.net/teamblogs/2011/12/19/cake-pattern-in-depth).
 
 ```scala
 CommandModule {
