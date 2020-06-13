@@ -336,3 +336,31 @@ includes the submodule using `extends [...] Monitoring`.
 }
 ```
 
+### Swap modules
+
+A common use case in combination with Dependency Injection and Mixin is to exchange the implementation of modules
+without a lot of effort. This can be useful for creating mock implementation in software testing or exchanging
+the modules depending on the target scenario. 
+
+For example, 
+```scala
+@multitier trait FakeCommand extends Command {
+  self: Monitoring =>
+
+  override val shutdown: Var[Boolean] on ControlIssuer = Var(false)
+
+  def main(): Unit on Sender = {
+    shutdown.set(true)
+  }
+}
+```
+
+Next, exchange the used implementation that should be used in `MonitoredMasterWorker` by replacing it. Now 
+`MonitoredMasterWorker` will use the new implementation without breaking the other modules.
+```scala
+@multitier trait MonitoredMasterWorker[T] extends Command with MultipleMasterWorker[T] with Monitoring {
+```
+
+```scala
+@multitier trait MonitoredMasterWorker[T] extends FakeCommand with MultipleMasterWorker[T] with Monitoring {
+```
