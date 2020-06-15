@@ -41,6 +41,17 @@ keyword between two peers. If you have more than two peers, you need to add corr
 the implementation of peer `Client` is combined with the tuple of `(Controller and Server)`.
 
 ```scala
+  @peer type Peer
+
+  // behind peer you could include more sub peers using with ...
+  @peer type Server <: Peer {
+    type Tie <: [...]
+  }
+
+  @peer type Client <: Peer {
+    type Tie <: [...]
+  }
+
   def main(): Unit on Peer = on[Client] {
     // main method on Client
   } and (on[Controller] {
