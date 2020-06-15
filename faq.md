@@ -94,7 +94,7 @@ representable value:
 
 ## Mismatched types Future
 
-In combination with serializing the data in could happen that you get errors about
+In combination with serializing the data for `ReScala` in could happen that you get errors about
 mismatched types when transferring the data over different peers. This could be caused if you forgot
 to include the required import statement.
 
