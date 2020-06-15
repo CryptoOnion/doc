@@ -57,8 +57,6 @@ def main() = on[Client] {
     for (line <- scala.io.Source.stdin.getLines) {
       message.fire(line)
     }
-    }
-}
 ```
 
 Notice how we access the `publicMessage` event which is stored on another peer (the server) using `asLocal`.
