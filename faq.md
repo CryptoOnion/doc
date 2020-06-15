@@ -69,7 +69,7 @@ Another peer can no longer access this value.
 
 Considering a control interface with a switch. We want to know which peer last changed this value. Therefore,
 we use a tuple containing the current value and peer instance (here: an administrator) who requested the change. In this 
-example we use optional for representing a non-peer change (e.g. physical access) or for its initial value.
+example we use option for representing a non-peer change (e.g. physical access) or for its initial value.
 ```scala
 val setting: Local[Signal[(Option[Remote[AdminClient]], Boolean)]] on Server = placed { ... }
 ```
