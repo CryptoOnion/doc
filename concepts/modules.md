@@ -271,8 +271,26 @@ the service (here: `Actor`). This module represents actions that should be perfo
 }
 ```
 
-Next create query module. This will query the `Oracle` for the current data. In this case the `Oracle` is a sub-type
-of a `Monitor` peer. However, the data and the peer definition is located inside the `Monitoring` module:
+Next adjust peer types `Monitoring` in order to make `shutdown` variable accessible for the `Monitor` peer. In this
+scenario the `Monitor` will act on command input and therefore include add it as a super peer. Because the peer
+definition of `Actor` is defined in `ControlCommand`, a dependency on it is added.
+
+```scala
+@multitier trait Monitoring {
+  self: ControlCommand =>
+
+  @peer type Monitor <: Actor { type Tie <: Multiple[Monitored] with Multiple[ControlIssuer] }
+
+  [...]
+  
+  val forceSave = on[Monitor] {
+    val all = shutdown.asLocalFromAll
+  }
+}
+``` 
+
+Next create query module. This will query the `Oracle` for the current data. In this case the `Oracle` is a super-type
+of a `Monitor` peer. However, the data and the peer definition will be defined located inside the `Monitoring` module:
 
 ```scala
 @multitier trait Monitoring {
@@ -284,12 +302,12 @@ of a `Monitor` peer. However, the data and the peer definition is located inside
 }
 ```
 
-Therefore, it's required to add a self-type which represents a dependency on this module. Then the variable `connected` 
-could be retrieved in `commandOutput` inside the query module.
+Therefore, similar to before it's required to a dependency to the other module and include their dependencies as well. 
+Then the variable `connected` could be retrieved in `commandOutput` inside the query module.
 
 ```scala 
 @multitier trait QueryCommand {
-  self: Monitoring =>
+  self: Monitoring with ControlCommand =>
 
   @peer type Oracle <: Monitor { type Tie <: Multiple[QuerySource] with Multiple[Monitored] }
   @peer type QuerySource <: { type Tie <: Single[Oracle] with Single[Monitor] }
