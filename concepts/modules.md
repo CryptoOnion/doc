@@ -31,7 +31,7 @@ They can be defined as only abstract members to act as a module interface, or as
 }
 ```
 
-This example defines a Backup service as having a processor that has a single tie to a storage, as well as a storage that has a single tie to a processor. Furthermore it defines the `store` and `load` methods as having the placed types `.. on Processor`, placing them on the `Processor` peer. Note that the `load` function results in a `Future` to account for processing time and networking delays.
+This example defines a Backup service as having a processor that has a single tie to a storage, as well as a storage that has a single tie to a processor. Furthermore, it defines the `store` and `load` methods as having the placed types `.. on Processor`, placing them on the `Processor` peer. Note that the `load` function results in a `Future` to account for processing time and networking delays.
 
 This interface can then be implemented using a concrete storage system by using `extends`.
 
@@ -55,7 +55,7 @@ This interface can then be implemented using a concrete storage system by using 
 }
 ```
 
-In this case the abstract method declarations from before are now implemented. In this case, the code would realize the `store` and `load` methods as calling the `write` or `read` method, which write and load data from a file, respectively. A different implementation might implement these methods in regards to a different storage medium, for example a database.
+In this case the abstract method declarations from before are now implemented. In this case, the code would realize the `store` and `load` methods as calling the `write` or `read` method, which write and load data from a file, respectively. A different implementation might implement these methods in regard to a different storage medium, for example a database.
 
 Remember that because the `write` and `read` methods are defined on the `Storage` peer, `store` and `load`, which are placed on the `Processor` peer, will need to make use of the `remote call` functionality, as described in the section *Remote Access*.
 
@@ -70,7 +70,7 @@ Multitier modules can then be combined. Note how the editor remains agnostic to 
 }
 ```
 
-Finally a multitier module can be instantiated by declaring an `object` that extends its `trait`.
+Finally, a multitier module can be instantiated by declaring an `object` that extends its `trait`.
 
 ```scala
 @multitier object editor extends Editor {
@@ -80,7 +80,7 @@ Finally a multitier module can be instantiated by declaring an `object` that ext
 
 ## Abstract Peer Types
 
-To understand peer types it first needs to be said that a peer does *not* refer to a physical place in a system, but a *logical* one instead. Specifically, a peer type distinguishes a values place only at the type level, meaning the placement type `T on P` represents a run time value of only type `T`. A value of type `P` is never constructed at run time. 
+To understand peer types it first needs to be said that a peer does *not* refer to a physical place in a system, but a *logical* one instead. Specifically, a peer type distinguishes a value place only at the type level, meaning the placement type `T on P` represents a run time value of only type `T`. A value of type `P` is never constructed at run time. 
 
 Consider the example in the previous section: Both the editor and its backup service define abstract peer types. When running this distributed system, one might want to define the `Client` peer to adopt the `Processor` role.
 
@@ -126,7 +126,7 @@ Firstly, consider this implementation of a master-worker model, in which a maste
 }
 ```
 
-A master is defined to have a multiple tie to workers and a worker is defined to have a single tie to a master. The `run` method is placed on `Master` and its offloads a given task by making a remote call to a workers `execute` method. It bases its selection of which worker to select on the `selectWorker` method. The implementation of this method is omitted for simplicities sake.
+A master is defined to have a multiple tie to workers, and a worker is defined to have a single tie to a master. The `run` method is placed on `Master` and its offloads a given task by making a remote call to a workers `execute` method. It bases its selection of which worker to select on the `selectWorker` method. The implementation of this method is omitted for simplicitie's sake.
 
 Secondly, consider this example case of a Monitoring subsystem, which reacts to possible failures of other distributed systems by using heartbeat messages. The `monitoredTimedOut` method is to be called whenever a heartbeat has not been received from a monitored peer instance for some time. The implementation of this mechanism is left out for simplicity.
 
@@ -140,7 +140,7 @@ Secondly, consider this example case of a Monitoring subsystem, which reacts to 
 }
 ```
 
-With module mixing, this monitoring system can easily be added to another subsystem, such as the master-worker model. This is done by extending both modules that are to be mixed and then combining their architectures by specializing the peers of one module to the peers of the other module by using `<:`, like so:
+Using module mixing, this monitoring system can easily be added to another subsystem, such as the master-worker model. This is done by extending both modules that are to be mixed and then combining their architectures by specializing the peers of one module to the peers of the other module by using `<:`, like so:
 
 ```scala
 @multitier trait MonitoredMasterWorker[T] extends MultipleMasterWorker[T] with Monitoring {
@@ -157,7 +157,7 @@ This section will highlight concepts on how to deal with dependencies between mo
 show examples for unidirectional dependencies. So an `Editor` referencing the storage module or
 a `MonitoredMasterWorker` using the implementation of its subsystems meanwhile the subsystems being independent of 
 each other. This means there is only a one-way dependency. Designing a system, often one problem occurs: cyclic 
-dependencies. This means that an multitier module `A` has a reference to multitier module `B` and vice versa.
+dependencies. This means that a multitier module `A` has a reference to multitier module `B` and vice versa.
 
 Considering the mentioned peer types specialization strategies, the following sections present one approach based on
 each strategy for dealing with them. Besides, specially targeting cyclic dependencies, other projects could include 
@@ -191,11 +191,11 @@ First, create a new multitier module. There are two inputs (i.e. `injectedDoc` a
 
 The inputs are retrieved from the parent `Editor` module. The aggregator is responsible for reacting on the changes
 made on the client (e.g. mapping them into a different format) and collecting them. It exposes the messages it holds. 
-The implementation how the messages are displayed is left out. In this scenario the Editor is responsible for rerouting
-it. Therefore, we have a cyclic reference, because the `Logging` takes two inputs from the Editor while the `Editor`
+The implementation how the messages are displayed is left out. In this scenario the `Editor` is responsible for rerouting
+it. Therefore, we have a cyclic reference, because the `Logging` takes two inputs from the `Editor` while the `Editor`
 reads the `logMessages` on `Logging`.  
 
-In the `Editor` the peer types needs to be adjusted and the logging module have to be added. The two variables 
+In the `Editor` the peer types needs to be adjusted, and the logging module has to be added. The two variables 
 `document` and `uiLog` were also added representing the current document and log messages that are taken from the
 `Logging` module and are displayed on the UI.
 
@@ -215,12 +215,12 @@ In the `Editor` the peer types needs to be adjusted and the logging module have 
   val document: Signal[String] on Client = placed { Var.empty[String] }
   val uiLog: Signal[Seq[String]] on Client = logging.logMessages.asLocal
 }
-```
+```a values
 
-The two inputs in the `Logging` module are still undefined. The companion object `editor` needs to be adjusted. This
-requires to create two extra variables, here prefixed with `bridge*`. Those variables  have the type `Evt` and `Var`
+The two inputs in the `Logging` module are still undefined. The companion `editor` object needs to be adjusted. This
+requires creating two extra variables, here prefixed with `bridge*`. Those variables  have the type `Evt` and `Var`
 in order to fire or set them externally, meanwhile the internal usage `Logging` only sees `Event` and `Signal` and
-cannot override them. Lastly the new variables needs to be connected. Therefore a main method is introduced that
+cannot override them. Lastly the new variables needs to be connected. Therefore, a main method is introduced that
 adds an observer to both original sources and forwards the changes to our bridge variables.
 
 ```scala
@@ -255,12 +255,12 @@ concepts in `Scala` using self-types. The self-types represent the dependency se
 scope requires.
 
 This approach uses Mixin. Therefore, the following example is based of the previous example for peer type mixin. 
-Considering a scenario with an added command module. Commands are used to shutdown the and also query the monitoring.
+Considering a scenario with an added command module. Commands are used to shut down the and query the monitoring.
 Therefore, we have a similar cyclic problem like before. 
 
-Separating the command module into three components, allows to create unidirectional data flow so that no cyclic
-references exist. First create ControlCommand, this will expose the users (here: issuer) intend to shutdown the 
-service (here: Actor). This module represents actions that should be performed on actors.
+Separating the command module into three components, allows us to create unidirectional data flow so that no cyclic
+references exist. First create `ControlCommand` module, this will expose the users (here: `Issuer`) intend to shut down 
+the service (here: `Actor`). This module represents actions that should be performed on actors.
 
 ```scala
 @multitier trait ControlCommand {
@@ -271,8 +271,8 @@ service (here: Actor). This module represents actions that should be performed o
 }
 ```
 
-Next create query module. This will query the Oracle for the current data. In this case the Oracle is a sub-type
-of a Monitor peer. However, the data and the peer definition is located inside the Monitoring module:
+Next create query module. This will query the `Oracle` for the current data. In this case the `Oracle` is a sub-type
+of a `Monitor` peer. However, the data and the peer definition is located inside the `Monitoring` module:
 
 ```scala
 @multitier trait Monitoring {
@@ -299,7 +299,7 @@ could be retrieved in `commandOutput` inside the query module.
 ```
 
 For convenience, it's possible to group the implementation now in a Command module. It combines both query and control
-components. Note that the value of `Monitoring` dependency hasn't specified yet. So we have to specificy the dependency
+components. Note that the value of `Monitoring` dependency hasn't specified yet. So we have to specify the dependency
 here too. Furthermore, the tie specification has to be pulled up too. 
 
 ```scala
@@ -317,8 +317,8 @@ here too. Furthermore, the tie specification has to be pulled up too.
 ```
 
 In the end, the combined module `MonitoredMasterWorker` that includes all modules has to add the above command module
-and including a new peer type `Client`. In this scenario, the Master peer handles the commands and therefore adds
-Receiver for its super type and pulls the respective tie specifications up. 
+and including a new peer type `Client`. In this scenario, the `Master` peer handles the commands and therefore adds
+`Receiver` for its super type and pulls the respective tie specifications up. 
 
 The `Monitoring` dependency that is required in `Command` is satisfied in this stage, because the combined module
 includes the submodule using `extends [...] Monitoring`. 
