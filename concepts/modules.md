@@ -289,7 +289,7 @@ definition of `Actor` is defined in `ControlCommand`, a dependency on it is adde
 }
 ``` 
 
-Next create query module. This will query the `Oracle` for the current data. In this case the `Oracle` is a super-type
+Next create query module. This will query the `Oracle` for the current data. In this case the `Oracle` is a sub-type
 of a `Monitor` peer. However, the data and the peer definition will be defined located inside the `Monitoring` module:
 
 ```scala
