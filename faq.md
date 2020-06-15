@@ -64,7 +64,7 @@ the implementation of peer `Client` is combined with the tuple of `(Controller a
 ## Remote[*] is not transmittable
 
 `Remotes[*]` are used to identify locally connected peers. They have no global meaning
-and are therefore not transmittable. If you need to save an instance of a remote, you could define the value as local.
+and are therefore not transmittable. If you need to save an instance of a remote, you need define the value as local.
 Another peer can no longer access this value.
 
 Considering a control interface with a switch. We want to know which peer last changed this value. Therefore,
