@@ -215,9 +215,9 @@ In the `Editor` the peer types needs to be adjusted, and the logging module has 
   val document: Signal[String] on Client = placed { Var.empty[String] }
   val uiLog: Signal[Seq[String]] on Client = logging.logMessages.asLocal
 }
-```a values
+```
 
-The two inputs in the `Logging` module are still undefined. The companion `editor` object needs to be adjusted. This
+The two inputs in the `Logging` module are still undefined. The `editor` object needs to be adjusted. This
 requires creating two extra variables, here prefixed with `bridge*`. Those variables  have the type `Evt` and `Var`
 in order to fire or set them externally, meanwhile the internal usage `Logging` only sees `Event` and `Signal` and
 cannot override them. Lastly the new variables needs to be connected. Therefore, a main method is introduced that
