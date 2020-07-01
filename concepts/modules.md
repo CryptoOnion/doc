@@ -273,7 +273,8 @@ the service (here: `Actor`). This module represents actions that should be perfo
 
 Next adjust peer types `Monitoring` in order to make `shutdown` variable accessible for the `Monitor` peer. In this
 scenario the `Monitor` will act on command input and therefore include add it as a super peer. Because the peer
-definition of `Actor` is defined in `ControlCommand`, a dependency on it is added.
+definition of `Actor` is defined in `ControlCommand`, a dependency on it is added using `self: MODULE [with ...]`. 
+Module is the required module. Multiple dependencies can be defined by combining them using `with`.
 
 ```scala
 @multitier trait Monitoring {
@@ -302,7 +303,7 @@ of a `Monitor` peer. However, the data and the peer definition will be defined l
 }
 ```
 
-Therefore, similar to before it's required to a dependency to the other module and include their dependencies as well. 
+Therefore, similar to before, it's required to a dependency to the other module and include their dependencies as well. 
 Then the variable `connected` could be retrieved in `commandOutput` inside the query module.
 
 ```scala 
